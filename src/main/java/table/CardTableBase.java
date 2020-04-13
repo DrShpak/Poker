@@ -11,6 +11,9 @@ public class CardTableBase {
     protected Queue<Card> deck;
     protected Queue<Player> players;
 
+    protected int smallBlind = 25;
+    protected int bigBlind = 50;
+
     public CardTableBase() {
         players = new ArrayDeque<>();
         players.add(new Player("Антон Заварка", 1000));
@@ -50,5 +53,27 @@ public class CardTableBase {
         assert players.peek() != null;
         players.peek().setDealer(true);
         players.add(players.poll());
+    }
+
+    public void setSmallBlind(int smallBlind) {
+        this.smallBlind = smallBlind;
+    }
+
+    public void setBigBlind(int bigBlind) {
+        this.bigBlind = bigBlind;
+    }
+
+    protected boolean isTradeFinished() {
+        var somePlayer = players.peek();
+//        var isTradeFinished = true;
+//        for (Player player : players) {
+//            if (somePlayer.getCurrentBet() != player.getCurrentBet()) {
+//                isTradeFinished = false;
+//                break;
+//            }
+//        }
+//        return isTradeFinished;
+        return !(players.stream().
+            anyMatch(x -> somePlayer.getCurrentBet() != x.getCurrentBet()));
     }
 }

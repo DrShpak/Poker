@@ -1,36 +1,33 @@
 package table;
 
 import cards.Card;
-import cards.CardValues;
-import cards.Suit;
 import player.Player;
-import table.betting.Betting;
+import betting.Betting;
 
 import java.util.*;
 
 public class CardTable extends CardTableBase {
     private List<List<Card>> combinations;
-//    private Queue<Card> deck;
     private Map<Player, List<Card>> playersCombinations;
-    private Queue<Player> players;
     private List<Card> tableCards;
 
     private int highestBet = 0;
-    private int smallBlind = 25;
-    private int bigBlind = 50;
 
     public CardTable() {
-//        players = new ArrayDeque<>();
         super();
         tableCards = new ArrayList<>();
-//        players.add(new Player("Антон Заварка", 1000));
-//        players.add(new Player("Гей Турчинский", 1000));
-//        players.add(new Player("Михаил Елдаков", 1000));
-//        initDeck();
     }
 
-    public void smallBlind() {
+    public void makeSmallBlind() {
+        assert players.peek() != null;
+        players.peek().makeBet(smallBlind);
+        players.add(players.poll()); // вкинувшего малый блайнд игрока перекидываем в конец очереди
+    }
 
+    public void makeBigBlind() {
+        assert players.peek() != null;
+        players.peek().makeBet(bigBlind);
+        players.add(players.poll()); // вкинувшего большой блайнд игрока перекидываем в конец очередь
     }
 
     public void preFlop() {
@@ -57,11 +54,77 @@ public class CardTable extends CardTableBase {
         printCardsOnTheTable();
     }
 
+    public void tradeRound2() {
+        var currBet = 0;
+        do {
+            for (Player player : players) {
+                System.out.println("Player " + player.getName() + " is making a bet...");
+                printListOfActs();
+                var input = new Scanner(System.in);
+                var flag = true;
+                while (flag) {
+                    switch (input.nextLine()) {
+                        case "bet" -> {
+                            if (highestBet != 0) {
+                                System.out.println("You cannot make a bet! Bet has already made.");
+                            } else {
+                                System.out.print("Input your bet: ");
+                                highestBet = Integer.parseInt(input.nextLine());
+                                Betting.BET.bet(highestBet, player);
+                                flag = false;
+                                printGap();
+                            }
+                        }
+                        case "call" -> {
+                            if (highestBet == 0) {
+                                printMessageerror("call");
+                            } else {
+                                Betting.CALL.bet(highestBet, player);
+                                flag = false;
+                                printGap();
+                            }
+                        }
+                        case "raise" -> {
+                            if (highestBet == 0) {
+                                printMessageerror("raise");
+                            } else {
+                                System.out.print("Input your bet: ");
+                                highestBet = Integer.parseInt(input.nextLine());
+                                Betting.RAISE.bet(highestBet, player);
+                                flag = false;
+                                printGap();
+                            }
+                        }
+                        case "check" -> {
+                            if (highestBet != 0) {
+                                Betting.CHECK.bet(0, player);
+                                flag = false;
+                                printGap();
+                            } else
+                                printMessageerror("check");
+                        }
+                        case "fold" -> {
+                            if (highestBet == 0) {
+                                printMessageerror("fold");
+                            } else {
+                                Betting.FOLD.bet(player.getCurrentBet(), player);
+                                players.remove(player);
+                                flag = false;
+                                printGap();
+                            }
+                        }
+                    }
+                }
+            }
+        } while (true);
+    }
+
+
     //console version
     public void tradeRound() {
         var currentBet = 0;
         var checkCounts = 0;
-        while (checkCounts != players.size()) {
+        while (true) {
             var canCheck = true;
 
             for (Player player : players) {
@@ -122,8 +185,8 @@ public class CardTable extends CardTableBase {
                                 printMessageerror("fold");
                             } else {
                                 Betting.FOLD.bet(player.getCurrentBet(), player);
+                                players.remove(player);
                                 flag = false;
-                                checkCounts = 0;
                                 printGap();
                             }
                         }
@@ -132,10 +195,6 @@ public class CardTable extends CardTableBase {
             }
         }
     }
-
-//    void initDeck() {
-//        super.initDeck();
-//    }
 
     private void printMessageerror(String act) {
         if (act.equals("check"))

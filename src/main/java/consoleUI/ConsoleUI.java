@@ -10,8 +10,10 @@ public class ConsoleUI {
     }
 
     public void startGame() {
-        cardTable.setDealer();
         while (true) {
+            cardTable.setDealer();
+            cardTable.makeSmallBlind();
+            cardTable.makeBigBlind();
             cardTable.preFlop();
             cardTable.tradeRound();
             cardTable.flop();

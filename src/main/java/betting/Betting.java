@@ -1,4 +1,4 @@
-package table.betting;
+package betting;
 
 import player.Player;
 

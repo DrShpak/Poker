@@ -18,6 +18,21 @@ public class Player {
         this.overallPot = overallPot;
     }
 
+    public void makeBet(int bet) {
+        currentBet += bet;
+    }
+
+    //job - слив денег
+    public void job() {
+        overallPot -= currentBet;
+        currentBet = 0;
+    }
+
+    public void takePot(int pot) {
+        overallPot += pot;
+        currentBet = 0;
+    }
+
     public List<Card> getCards() {
         return cards;
     }
@@ -56,5 +71,9 @@ public class Player {
 
     public void setDealer(boolean dealer) {
         isDealer = dealer;
+    }
+
+    public boolean isDealer() {
+        return isDealer;
     }
 }
