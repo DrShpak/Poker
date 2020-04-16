@@ -1,6 +1,6 @@
 package cards;
 
-public class Card {
+public class Card implements Comparable<Card> {
     private CardValues cardValue;
     private Suit suit;
 
@@ -13,15 +13,12 @@ public class Card {
         return cardValue;
     }
 
-    public void setCardValue(CardValues cardValue) {
-        this.cardValue = cardValue;
-    }
-
     public Suit getSuit() {
         return suit;
     }
 
-    public void setSuit(Suit suit) {
-        this.suit = suit;
+    @Override
+    public int compareTo(Card o) {
+        return Integer.compare(this.cardValue.value, o.cardValue.value);
     }
 }

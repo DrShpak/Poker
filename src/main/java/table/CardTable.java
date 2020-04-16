@@ -1,33 +1,22 @@
 package table;
 
+import betting.BetManager;
 import cards.Card;
 import player.Player;
-import betting.Betting;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class CardTable extends CardTableBase {
     private List<List<Card>> combinations;
     private Map<Player, List<Card>> playersCombinations;
     private List<Card> tableCards;
-
-    private int highestBet = 0;
+    private BetManager betMngr;
 
     public CardTable() {
         super();
         tableCards = new ArrayList<>();
-    }
-
-    public void makeSmallBlind() {
-        assert players.peek() != null;
-        players.peek().makeBet(smallBlind);
-        players.add(players.poll()); // вкинувшего малый блайнд игрока перекидываем в конец очереди
-    }
-
-    public void makeBigBlind() {
-        assert players.peek() != null;
-        players.peek().makeBet(bigBlind);
-        players.add(players.poll()); // вкинувшего большой блайнд игрока перекидываем в конец очередь
+        betMngr = new BetManager();
     }
 
     public void preFlop() {
@@ -54,156 +43,21 @@ public class CardTable extends CardTableBase {
         printCardsOnTheTable();
     }
 
-    public void tradeRound2() {
-        var currBet = 0;
+    public void tradeRound() {
+        betMngr.setCanBet(true);
+        betMngr.resetCurrBet(); // сбрасываем текущую ставку (ну то есть каждый раунд торговли новая текущая ставка)
+        betMngr.resetPlayersCurrBets(this); // у игроков тоже сбарсываем их чтавки за прошлый раунд торговли
+
         do {
             for (Player player : players) {
                 System.out.println("Player " + player.getName() + " is making a bet...");
                 printListOfActs();
-                var input = new Scanner(System.in);
-                var flag = true;
-                while (flag) {
-                    switch (input.nextLine()) {
-                        case "bet" -> {
-                            if (highestBet != 0) {
-                                System.out.println("You cannot make a bet! Bet has already made.");
-                            } else {
-                                System.out.print("Input your bet: ");
-                                highestBet = Integer.parseInt(input.nextLine());
-                                Betting.BET.bet(highestBet, player);
-                                flag = false;
-                                printGap();
-                            }
-                        }
-                        case "call" -> {
-                            if (highestBet == 0) {
-                                printMessageerror("call");
-                            } else {
-                                Betting.CALL.bet(highestBet, player);
-                                flag = false;
-                                printGap();
-                            }
-                        }
-                        case "raise" -> {
-                            if (highestBet == 0) {
-                                printMessageerror("raise");
-                            } else {
-                                System.out.print("Input your bet: ");
-                                highestBet = Integer.parseInt(input.nextLine());
-                                Betting.RAISE.bet(highestBet, player);
-                                flag = false;
-                                printGap();
-                            }
-                        }
-                        case "check" -> {
-                            if (highestBet != 0) {
-                                Betting.CHECK.bet(0, player);
-                                flag = false;
-                                printGap();
-                            } else
-                                printMessageerror("check");
-                        }
-                        case "fold" -> {
-                            if (highestBet == 0) {
-                                printMessageerror("fold");
-                            } else {
-                                Betting.FOLD.bet(player.getCurrentBet(), player);
-                                players.remove(player);
-                                flag = false;
-                                printGap();
-                            }
-                        }
-                    }
-                }
+                betMngr.bet(player, this);
+                this.players = players.stream().filter(Player::isInGame) // выыбрасываем тех, кто сделал фолд
+                    .collect(Collectors.toCollection(ArrayDeque::new));
+
             }
-        } while (true);
-    }
-
-
-    //console version
-    public void tradeRound() {
-        var currentBet = 0;
-        var checkCounts = 0;
-        while (true) {
-            var canCheck = true;
-
-            for (Player player : players) {
-                System.out.println("Player " + player.getName() + " is making a bet...");
-                printListOfActs();
-                var input = new Scanner(System.in);
-                var flag = true;
-                while (flag) {
-                    switch (input.nextLine()) {
-                        case "bet" -> {
-                            if (highestBet != 0) {
-                                System.out.println("You cannot make a bet! Bet has already made.");
-                            } else {
-                                System.out.print("Input your bet: ");
-                                highestBet = Integer.parseInt(input.nextLine());
-                                Betting.BET.bet(highestBet, player);
-                                flag = false;
-                                canCheck = false;
-                                checkCounts = 0;
-                                printGap();
-                            }
-                        }
-                        case "call" -> {
-                            if (highestBet == 0) {
-                                printMessageerror("call");
-                            } else {
-                                Betting.CALL.bet(highestBet, player);
-                                flag = false;
-                                canCheck = false;
-                                checkCounts = 0;
-                                printGap();
-                            }
-                        }
-                        case "raise" -> {
-                            if (highestBet == 0) {
-                                printMessageerror("raise");
-                            } else {
-                                System.out.print("Input your bet: ");
-                                highestBet = Integer.parseInt(input.nextLine());
-                                Betting.RAISE.bet(highestBet, player);
-                                flag = false;
-                                canCheck = false;
-                                checkCounts = 0;
-                                printGap();
-                            }
-                        }
-                        case "check" -> {
-                            if (canCheck && highestBet != 0) {
-                                Betting.CHECK.bet(0, player);
-                                checkCounts++;
-                                flag = false;
-                                printGap();
-                            } else
-                                printMessageerror("check");
-                        }
-                        case "fold" -> {
-                            if (highestBet == 0) {
-                                printMessageerror("fold");
-                            } else {
-                                Betting.FOLD.bet(player.getCurrentBet(), player);
-                                players.remove(player);
-                                flag = false;
-                                printGap();
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    private void printMessageerror(String act) {
-        if (act.equals("check"))
-            System.out.println("You cannot make \"" + act + "\"!\n"
-            + "Other players has already made bets or min bet hasn't made yet.");
-        else
-            System.out.println("You cannot make \"" + act
-                + "\"! Bet hasn't made yet.\n");
-        System.out.print("Make another choice: ");
+        } while (!isTradeFinished());
     }
 
     private void printCardsOnTheTable() {
@@ -222,7 +76,7 @@ public class CardTable extends CardTableBase {
         System.out.print("Input your choice by words: ");
     }
 
-    private void printGap() {
-        System.out.print("\n\n");
+    public BetManager getBetMngr() {
+        return betMngr;
     }
 }

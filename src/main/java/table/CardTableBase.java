@@ -55,25 +55,28 @@ public class CardTableBase {
         players.add(players.poll());
     }
 
-    public void setSmallBlind(int smallBlind) {
-        this.smallBlind = smallBlind;
-    }
-
-    public void setBigBlind(int bigBlind) {
-        this.bigBlind = bigBlind;
-    }
-
-    protected boolean isTradeFinished() {
+    public boolean isTradeFinished() {
         var somePlayer = players.peek();
-//        var isTradeFinished = true;
-//        for (Player player : players) {
-//            if (somePlayer.getCurrentBet() != player.getCurrentBet()) {
-//                isTradeFinished = false;
-//                break;
-//            }
-//        }
-//        return isTradeFinished;
-        return !(players.stream().
-            anyMatch(x -> somePlayer.getCurrentBet() != x.getCurrentBet()));
+        return players.stream().
+            noneMatch(x -> somePlayer.getCurrBet() != x.getCurrBet());
+    }
+
+    //выстраиваме нормальный порядок для хода
+    public void setOrder() {
+        while (!Objects.requireNonNull(players.peek()).isDealer())
+            players.add(players.poll());
+        players.add(players.poll());
+    }
+
+    public Queue<Player> getPlayers() {
+        return players;
+    }
+
+    public int getSmallBlind() {
+        return smallBlind;
+    }
+
+    public int getBigBlind() {
+        return bigBlind;
     }
 }
