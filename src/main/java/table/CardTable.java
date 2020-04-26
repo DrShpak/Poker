@@ -11,11 +11,9 @@ import java.util.stream.Collectors;
 public class CardTable extends CardTableBase {
     private List<List<Card>> combinations;
     private Map<Player, List<Card>> playersCombinations;
-    private final BetManager betMngr;
 
     public CardTable() {
         super();
-        betMngr = new BetManager();
     }
 
     public void preFlop() {
@@ -84,9 +82,5 @@ public class CardTable extends CardTableBase {
         System.out.println("\"raise\"");
         System.out.println("\"fold\"");
         System.out.print("Input your choice by words: ");
-    }
-
-    public BetManager getBetMngr() {
-        return betMngr;
     }
 }

@@ -1,5 +1,6 @@
 package table;
 
+import betting.BetManager;
 import cards.Card;
 import cards.CardValues;
 import cards.Suit;
@@ -14,12 +15,14 @@ public abstract class CardTableBase {
     protected final List<Player> players;
     protected final List<Card> tableCards;
     protected Player winner;
+    protected final BetManager betMngr;
 
     public CardTableBase() {
         activePlayers = new ArrayDeque<>();
         players = new ArrayList<>();
         tableCards = new ArrayList<>();
         deck = new ArrayDeque<>();
+        betMngr = new BetManager();
         players.add(new Player("Антон Заварка", 1000));
         players.add(new Player("Гей Турчинский", 1000));
         players.add(new Player("Михаил Елдаков", 1000));
@@ -32,6 +35,7 @@ public abstract class CardTableBase {
         tableCards.clear();
         activePlayers.clear();
         initDeck();
+        betMngr.setPot(0);
         activePlayers.addAll(players);
         activePlayers.forEach(x -> x.setInGame(true));
         winner = null;
@@ -139,5 +143,13 @@ public abstract class CardTableBase {
 
     public void setWinner(Player winner) {
         this.winner = winner;
+    }
+
+    public BetManager getBetMngr() {
+        return betMngr;
+    }
+
+    public void winnerTakePot(Player player, int pot) {
+        player.setStack(player.getStack() + pot);
     }
 }
