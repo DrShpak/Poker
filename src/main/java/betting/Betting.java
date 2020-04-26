@@ -2,6 +2,7 @@ package betting;
 
 import player.Player;
 
+//суперкласс для всех видов ставки
 public abstract class Betting {
     protected Player player;
     protected BetManager mngr;

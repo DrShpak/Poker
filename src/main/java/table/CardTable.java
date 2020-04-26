@@ -43,31 +43,31 @@ public class CardTable extends CardTableBase {
     }
 
     public void tradeRound() {
-        betMngr.setCanBet(true);
+        betMngr.setCanBet(true); // первому игроку можно совершитьс ставку
         betMngr.resetCurrBet(); // сбрасываем текущую ставку (ну то есть каждый раунд торговли новая текущая ставка)
         Player currPlayer;
-        var count = 0; // костыльное гавно, которое дополняет проверку в случае чеков
+        var count = 0; // костыльное гавно, которое дополняет проверку в случае чеков (типо считаем сколько челиков чекнули)
 
         do {
             System.out.println(String.format("Current bet = %d$ ", betMngr.getCurrBet()));
             System.out.println(String.format("Overall pot = %d$ ", betMngr.getPot()));
-            currPlayer = activePlayers.poll();
+            currPlayer = activePlayers.poll(); // достаем игрока из очереди (потом положим обратно, если он не сделает фолд)
             assert currPlayer != null;
             System.out.println("Player " + currPlayer.getName() + " is making a bet...");
             System.out.println(String.format("Current bet %s's = %d$", currPlayer.getName(), currPlayer.getCurrBet()));
             printListOfActs();
-            betMngr.bet(currPlayer);
+            betMngr.bet(currPlayer); // делает ставку
             count++;
 
             activePlayers = activePlayers.stream().filter(Player::isInGame) // выыбрасываем тех, кто сделал фолд
                 .collect(Collectors.toCollection(ArrayDeque::new));
-            if (currPlayer.isInGame())
+            if (currPlayer.isInGame()) // вовзращаем того игрока, которого вынули из очереди (если он не фолданул)
                 activePlayers.add(currPlayer);
         } while (!isTradeFinished() || (betMngr.getLastBet() instanceof Check && count < activePlayers.size()));
 
-        betMngr.resetPlayersCurrBets(this); // у игроков тоже сбарсываем их ставки за прошлый раунд торговли
-        if (activePlayers.size() == 1)
-            winner = activePlayers.poll();
+        betMngr.resetPlayersCurrBets(this); // сбрасываем текущие ставки игроков за прошедший раунд торговли
+        if (activePlayers.size() == 1)  // если все фолданули , то оставшегося игрока объявляем победителем
+            winner = activePlayers.peek();
         betMngr.setLastBet(null);
         /*
           восстанавливаем правильный порядок. когда все уровнялись, очередь закончилась на том

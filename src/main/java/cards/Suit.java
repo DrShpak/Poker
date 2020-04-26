@@ -1,10 +1,10 @@
 package cards;
 
 public enum Suit {
-    DIAMOND ("diamond"),
-    CLUB ("club"),
-    HEART ("heart"),
-    SPADE ("spade");
+    DIAMOND("diamond"),
+    CLUB("club"),
+    HEART("heart"),
+    SPADE("spade");
 
     String suit;
 

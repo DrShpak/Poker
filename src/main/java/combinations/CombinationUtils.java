@@ -9,6 +9,15 @@ import java.util.stream.Collectors;
 
 public class CombinationUtils {
 
+    /*
+     алгоритм подсчета колчиества сочетаний без повторений
+     он генерирует какую-т опоследовательность из n чисел по k чисел
+     например для 5-карточных комбинаций он бвдет выдавать:
+     0 1 2 3 4 (это ИНДЕКСЫ)
+     1 2 3 4 5
+     2 5 6 0 1
+     и тд
+     */
     private static int[] generateIndices(int k, int n, int[] arr) {
         if (arr == null)
         {
@@ -28,9 +37,10 @@ public class CombinationUtils {
         return null;
     }
 
+    // получаем всевозможные комбинации из 7 карт
     public static ArrayList<ArrayList<Card>> generateCombinations(int k, int n, List<Card> playerCards, List<Card> tableCards) {
         var cards = mergeCards(playerCards, tableCards);
-        var combinationsOfCards = new ArrayList<ArrayList<Card>>();
+        var combinationsOfCards = new ArrayList<ArrayList<Card>>(); // список со всеми возможными комбинациями
         int[] arr = null;
         while ((arr = generateIndices(k, n, arr)) != null)
             combinationsOfCards.add(

@@ -7,11 +7,17 @@ import table.CardTableBase;
 import java.util.Scanner;
 
 public class BetManager {
-    private int pot = 0;
+    private int pot = 0; // банк
     private Scanner input;
     protected int minBet = 50;
-    int currBet = 0;
-    protected boolean canBet = true;
+    int currBet = 0; // текущая ставка текущих ранудов торгов
+    protected boolean canBet = true; // можно ли сделать ставку?
+    /*
+     ненмого костыль
+     (запомниаем последнюю ставку для проверки на допустимость сделать чек)
+     то есть если последняя ставка была какая угодно кроме чека, то чек невозможен
+     нужно либо коллировать, либо рейзить
+     */
     protected Betting lastBet;
 
     public BetManager() {
@@ -19,6 +25,7 @@ public class BetManager {
         this.input = new Scanner(System.in);
     }
 
+    // достаточно ли банка у игрока чтобы сделать такую ставку
     boolean isPotEnough(Player player, int betSize) {
         return player.getStack() >= betSize;
     }
@@ -35,7 +42,7 @@ public class BetManager {
         var players = CardTableBase.getActivePlayers();
         assert players.peek() != null;
         var player = players.peek();
-        player.setCurrBet(betSize);
+        player.setCurrBet(betSize); // текущую ставку делаем равную блайнду (малому/большому)
         pot += betSize;
         player.setStack(player.getStack() - betSize);
         players.add(players.poll()); // вкинувшего блайнд игрока перекидываем в конец очереди
@@ -56,13 +63,13 @@ public class BetManager {
                     }
                 }
                 case "call" -> {
-                    if (new Call(player, this).bet()) {
+                    if (new Call(player, this).bet()) { // если это дейсвтие удалось выполнить то выходим из цикла
                         flag = false;
-                        lastBet = new Call();
+                        lastBet = new Call(); // запоминаем ласт ставку (для проверки на доупстимость чека, см. описание поля lastBet)
                     }
                 }
                 case "raise" -> {
-                    if (new Raise(player, this).bet()) {
+                    if (new Raise(player, this).bet()) { // если это дейсвтие удалось выполнить то выходим из цикла
                         flag = false;
                         lastBet = new Raise();
                     }
@@ -76,7 +83,7 @@ public class BetManager {
                 case "fold" -> {
                     if (new Fold(player, this).bet()) {
                         flag = false;
-                        player.setInGame(false);
+                        player.setInGame(false); // фолданул - вылетел из раздачи (не из-за стола!!)
                         lastBet = new Fold();
                     }
                 }

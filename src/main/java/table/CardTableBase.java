@@ -64,12 +64,14 @@ public abstract class CardTableBase {
         }
     }
 
+    // установка диллера
     public void setDealer() {
         assert activePlayers.peek() != null;
         activePlayers.peek().setDealer(true);
         activePlayers.add(activePlayers.poll());
     }
 
+    // проверка окончания торгов
     public static boolean isTradeFinished() {
         var somePlayer = activePlayers.peek();
         return activePlayers.stream().
