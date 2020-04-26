@@ -1,6 +1,7 @@
 package table;
 
 import betting.BetManager;
+import betting.Check;
 import cards.Card;
 import player.Player;
 
@@ -18,7 +19,7 @@ public class CardTable extends CardTableBase {
     }
 
     public void preFlop() {
-        players.forEach(x -> x.setCards(this.deck.poll(), this.deck.poll()));
+        activePlayers.forEach(x -> x.setCards(this.deck.poll(), this.deck.poll()));
     }
 
     public void flop() {
@@ -44,18 +45,35 @@ public class CardTable extends CardTableBase {
     public void tradeRound() {
         betMngr.setCanBet(true);
         betMngr.resetCurrBet(); // сбрасываем текущую ставку (ну то есть каждый раунд торговли новая текущая ставка)
-        betMngr.resetPlayersCurrBets(this); // у игроков тоже сбарсываем их ставки за прошлый раунд торговли
+        Player currPlayer;
+        var count = 0; // костыльное гавно, которое дополняет проверку в случае чеков
 
         do {
-            for (Player player : players) {
-                System.out.println("Player " + player.getName() + " is making a bet...");
-                printListOfActs();
-                betMngr.bet(player);
-                players = players.stream().filter(Player::isInGame) // выыбрасываем тех, кто сделал фолд
-                    .collect(Collectors.toCollection(ArrayDeque::new));
+            System.out.println(String.format("Current bet = %d$ ", betMngr.getCurrBet()));
+            System.out.println(String.format("Overall pot = %d$ ", betMngr.getPot()));
+            currPlayer = activePlayers.poll();
+            assert currPlayer != null;
+            System.out.println("Player " + currPlayer.getName() + " is making a bet...");
+            System.out.println(String.format("Current bet %s's = %d$", currPlayer.getName(), currPlayer.getCurrBet()));
+            printListOfActs();
+            betMngr.bet(currPlayer);
+            count++;
 
-            }
-        } while (!isTradeFinished());
+            activePlayers = activePlayers.stream().filter(Player::isInGame) // выыбрасываем тех, кто сделал фолд
+                .collect(Collectors.toCollection(ArrayDeque::new));
+            if (currPlayer.isInGame())
+                activePlayers.add(currPlayer);
+        } while (!isTradeFinished() || (betMngr.getLastBet() instanceof Check && count < activePlayers.size()));
+
+        betMngr.resetPlayersCurrBets(this); // у игроков тоже сбарсываем их ставки за прошлый раунд торговли
+        if (activePlayers.size() == 1)
+            winner = activePlayers.poll();
+        betMngr.setLastBet(null);
+        /*
+          восстанавливаем правильный порядок. когда все уровнялись, очередь закончилась на том
+          кто зарейзил
+         */
+        setOrder();
     }
 
     private void printListOfActs() {

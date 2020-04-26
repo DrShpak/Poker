@@ -8,9 +8,12 @@ public class Check extends Betting {
         super(player, mngr);
     }
 
+    public Check() {
+    }
+
     @Override
     public boolean bet() {
-        if (mngr.getPot() != 0 && CardTableBase.isTradeFinished() && !mngr.canBet) {
+        if (mngr.getPot() != 0 && ((mngr.lastBet instanceof Check) || (mngr.lastBet == null))) {
             printGap();
             return true;
         }

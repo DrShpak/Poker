@@ -67,11 +67,11 @@ public enum CombinationsValues {
             count = 0;
             for (int i = 0; i < combination.size() - 1; i++) {
                 if (combination.get(i + 1).getCardValue().getValue()
-                    - combination.get(i).getCardValue().getValue() > 1)
+                    - combination.get(i).getCardValue().getValue() == 1)
                     break;
                 count++;
             }
-            if (count == combination.size() - 1)
+            if (count == combination.size() - 1) // -1  потому что попарно сранвиваем и в итоге будет 4 сравнения
                 straights.add(combination);
         }
         return straights;

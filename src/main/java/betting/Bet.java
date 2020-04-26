@@ -9,6 +9,9 @@ public class Bet extends Betting {
         super(player, mngr);
     }
 
+    public Bet() {
+    }
+
     @Override
     public boolean bet() {
         if (mngr.canBet) {

@@ -11,10 +11,13 @@ public abstract class Betting {
         this.mngr = mngr;
     }
 
+    public Betting() {
+    }
+
     public abstract boolean bet();
 
     protected void printMessageerror(String act) {
-        System.out.println("You cannot make \"" + act);
+        System.out.println("You cannot make \"" + act + "\"");
         System.out.print("Make another choice: ");
     }
 

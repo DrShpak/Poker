@@ -3,30 +3,38 @@ package table;
 import cards.Card;
 import cards.CardValues;
 import cards.Suit;
+import combinations.CombinationsValues;
 import player.Player;
 
 import java.util.*;
 
 public abstract class CardTableBase {
     protected Queue<Card> deck;
-    protected static Queue<Player> players;
+    protected static Queue<Player> activePlayers;
+    protected List<Player> players;
     protected List<Card> tableCards;
+    protected Player winner;
 
     protected int smallBlind = 25;
     protected int bigBlind = 50;
 
     public CardTableBase() {
-        players = new ArrayDeque<>();
+        activePlayers = new ArrayDeque<>();
+        players = new ArrayList<>();
         tableCards = new ArrayList<>();
         players.add(new Player("Антон Заварка", 1000));
         players.add(new Player("Гей Турчинский", 1000));
         players.add(new Player("Михаил Елдаков", 1000));
-        initDeck();
+        initHand();
     }
 
     // инициализация раздачи
     public void initHand() {
-
+        initDeck();
+        activePlayers.clear();
+        activePlayers.addAll(players);
+        activePlayers.forEach(x -> x.setInGame(true));
+        winner = null;
     }
 
     //инициализация карт
@@ -57,14 +65,14 @@ public abstract class CardTableBase {
     }
 
     public void setDealer() {
-        assert players.peek() != null;
-        players.peek().setDealer(true);
-        players.add(players.poll());
+        assert activePlayers.peek() != null;
+        activePlayers.peek().setDealer(true);
+        activePlayers.add(activePlayers.poll());
     }
 
     public static boolean isTradeFinished() {
-        var somePlayer = players.peek();
-        return players.stream().
+        var somePlayer = activePlayers.peek();
+        return activePlayers.stream().
             noneMatch(x -> somePlayer.getCurrBet() != x.getCurrBet());
     }
 
@@ -76,13 +84,39 @@ public abstract class CardTableBase {
 
     //выстраиваме нормальный порядок для хода
     public void setOrder() {
-        while (!Objects.requireNonNull(players.peek()).isDealer())
-            players.add(players.poll());
-        players.add(players.poll());
+        while (!Objects.requireNonNull(activePlayers.peek()).isDealer())
+            activePlayers.add(activePlayers.poll());
+//        activePlayers.add(activePlayers.poll());
     }
 
-    public static Queue<Player> getPlayers() {
-        return players;
+    private void setPlayersCombinations() {
+        for (Player player : activePlayers) {
+            player.setCombination(CombinationsValues.getCombination(player.getCards(), tableCards));
+        }
+    }
+
+    public void whoIsWinner() {
+        setPlayersCombinations();
+//        activePlayers.forEach(x -> {
+//            x.getCombination()
+//        });
+        var winner = activePlayers.poll();
+        assert winner != null;
+        for (Player player : activePlayers) {
+            if (player.getCombination().getValue() > winner.getCombination().getValue())
+                winner = player;
+            if (player.getCombination().getValue() == winner.getCombination().getValue()
+                && player.getCombination().getKicker() > winner.getCombination().getKicker())
+                winner = player;
+        }
+    }
+
+    public Player createPlayer() {
+        return new Player("Name", new Random().nextInt() + 1000);
+    }
+
+    public static Queue<Player> getActivePlayers() {
+        return activePlayers;
     }
 
     public int getSmallBlind() {
@@ -91,5 +125,13 @@ public abstract class CardTableBase {
 
     public int getBigBlind() {
         return bigBlind;
+    }
+
+    public Player getWinner() {
+        return winner;
+    }
+
+    public void setWinner(Player winner) {
+        this.winner = winner;
     }
 }

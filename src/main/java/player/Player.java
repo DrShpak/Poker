@@ -3,6 +3,7 @@ package player;
 import betting.Betting;
 import cards.Card;
 import combinations.CombinationUtils;
+import combinations.CombinationsValues;
 
 import java.util.Arrays;
 import java.util.List;
@@ -15,7 +16,7 @@ public class Player {
     private int currBet; // текущая ставка текущего РАУНДА
     private boolean isDealer;
     private boolean isInGame;
-    private CombinationUtils combinationUtils;
+    private CombinationsValues combination;
 
     public Player(String name, int overallPot) {
         this.name = name;
@@ -23,8 +24,16 @@ public class Player {
         this.isInGame = true;
     }
 
+    public Player() {
+    }
+
     public List<Card> getCards() {
         return cards;
+    }
+
+    public String showCards() {
+        return cards.get(0).getCardValue() + " " + cards.get(0).getSuit()
+            + "; " + cards.get(1).getCardValue() + " " + cards.get(1).getSuit();
     }
 
     public void setCards(Card card1, Card card2) {
@@ -75,15 +84,11 @@ public class Player {
         return isDealer;
     }
 
-    public void setCards(List<Card> cards) {
-        this.cards = cards;
+    public void setCombination(CombinationsValues combination) {
+        this.combination = combination;
     }
 
-    public CombinationUtils getCombinationUtils() {
-        return combinationUtils;
-    }
-
-    public void setCombinationUtils(CombinationUtils combinationUtils) {
-        this.combinationUtils = combinationUtils;
+    public CombinationsValues getCombination() {
+        return combination;
     }
 }

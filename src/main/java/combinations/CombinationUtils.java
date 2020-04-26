@@ -10,8 +10,16 @@ import java.util.stream.Collectors;
 public class CombinationUtils {
 
     private static int[] generateIndices(int k, int n, int[] arr) {
+        if (arr == null)
+        {
+            arr = new int[k];
+            for (int i = 0; i < k; i++)
+                arr[i] = i + 1;
+            return arr;
+        }
         for (int i = k - 1; i >= 0; i--)
-            if (arr[i] < n - k + i + 1) {
+            if (arr[i] < n - k + i + 1)
+            {
                 arr[i]++;
                 for (int j = i; j < k - 1; j++)
                     arr[j + 1] = arr[j] + 1;
@@ -27,7 +35,7 @@ public class CombinationUtils {
         while ((arr = generateIndices(k, n, arr)) != null)
             combinationsOfCards.add(
                 new ArrayList<>(Arrays.stream(arr)
-                    .mapToObj(cards::get)
+                    .mapToObj(x -> cards.get(x - 1))
                     .collect(Collectors.toList())));
         return combinationsOfCards;
     }

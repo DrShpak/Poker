@@ -12,8 +12,10 @@ public class BetManager {
     protected int minBet = 50;
     int currBet = 0;
     protected boolean canBet = true;
+    protected Betting lastBet;
 
     public BetManager() {
+        lastBet = null;
         this.input = new Scanner(System.in);
     }
 
@@ -30,11 +32,13 @@ public class BetManager {
     }
 
     private void makeBlind(CardTable table, int betSize) {
-        var players = CardTableBase.getPlayers();
+        var players = CardTableBase.getActivePlayers();
         assert players.peek() != null;
         var player = players.peek();
         player.setCurrBet(betSize);
-        players.add(players.poll()); // вкинувшего малый блайнд игрока перекидываем в конец очереди
+        pot += betSize;
+        player.setStack(player.getStack() - betSize);
+        players.add(players.poll()); // вкинувшего блайнд игрока перекидываем в конец очереди
     }
 
     public void resetCurrBet() {
@@ -46,25 +50,35 @@ public class BetManager {
         while (flag) {
             switch (input.nextLine()) {
                 case "bet" -> {
-                    if (new Bet(player, this).bet()) // если это дейсвтие удалось выполнить то выходим из цикла
+                    if (new Bet(player, this).bet()) { // если это дейсвтие удалось выполнить то выходим из цикла
                         flag = false;
+                        lastBet = new Bet();
+                    }
                 }
                 case "call" -> {
-                    if (new Call(player, this).bet())
+                    if (new Call(player, this).bet()) {
                         flag = false;
+                        lastBet = new Call();
+                    }
                 }
                 case "raise" -> {
-                    if (new Raise(player, this).bet())
+                    if (new Raise(player, this).bet()) {
                         flag = false;
+                        lastBet = new Raise();
+                    }
                 }
                 case "check" -> {
-                    if (new Check(player, this).bet())
+                    if (new Check(player, this).bet()) {
                         flag = false;
+                        lastBet = new Check();
+                    }
                 }
                 case "fold" -> {
-                    new Fold(player, this).bet();
-                    flag = false;
-                    player.setInGame(false);
+                    if (new Fold(player, this).bet()) {
+                        flag = false;
+                        player.setInGame(false);
+                        lastBet = new Fold();
+                    }
                 }
                 default -> System.out.print("Unknown command! Try again: ");
             }
@@ -72,7 +86,7 @@ public class BetManager {
     }
 
     public void resetPlayersCurrBets(CardTable table) {
-        CardTableBase.getPlayers().forEach(x -> x.setCurrBet(0));
+        CardTableBase.getActivePlayers().forEach(x -> x.setCurrBet(0));
     }
 
     public void setMinBet(int minBet) {
@@ -93,5 +107,13 @@ public class BetManager {
 
     public void setPot(int pot) {
         this.pot = pot;
+    }
+
+    public void setLastBet(Betting lastBet) {
+        this.lastBet = lastBet;
+    }
+
+    public Betting getLastBet() {
+        return lastBet;
     }
 }
