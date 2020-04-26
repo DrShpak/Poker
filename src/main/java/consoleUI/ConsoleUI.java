@@ -5,8 +5,8 @@ import table.CardTable;
 import java.util.Scanner;
 
 public class ConsoleUI {
-    private CardTable table;
-    private Scanner input;
+    private final CardTable table;
+    private final Scanner input;
 
     public ConsoleUI() {
         this.table = new CardTable();
@@ -23,8 +23,8 @@ public class ConsoleUI {
     private void hand() {
         table.initHand();
         table.setDealer();
-        table.getBetMngr().makeSmallBlind(table);
-        table.getBetMngr().makeBigBlind(table);
+        table.getBetMngr().makeSmallBlind();
+        table.getBetMngr().makeBigBlind();
         table.preFlop();
         table.tradeRound();
         if (table.getWinner() == null)
@@ -42,7 +42,6 @@ public class ConsoleUI {
             System.out.println("Winner is " + table.getWinner().getName());
             return;
         }
-//        table.turn();
         table.tradeRound();
         if (table.getWinner() == null)
             table.river();
@@ -51,7 +50,6 @@ public class ConsoleUI {
             System.out.println("Winner is " + table.getWinner().getName());
             return;
         }
-//        table.river();
         table.tradeRound();
         table.whoIsWinner();
     }

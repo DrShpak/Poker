@@ -1,17 +1,15 @@
 package player;
 
-import betting.Betting;
 import cards.Card;
-import combinations.CombinationUtils;
 import combinations.CombinationsValues;
 
 import java.util.Arrays;
 import java.util.List;
 
 public class Player {
+    @SuppressWarnings("CanBeFinal")
     private String name;
     private List<Card> cards;
-    private int chips;
     private int stack; // общий банк игрока
     private int currBet; // текущая ставка текущего РАУНДА
     private boolean isDealer;
@@ -24,13 +22,11 @@ public class Player {
         this.isInGame = true;
     }
 
-    public Player() {
-    }
-
     public List<Card> getCards() {
         return cards;
     }
 
+    // показать карты игрока
     public String showCards() {
         return cards.get(0).getCardValue() + " " + cards.get(0).getSuit()
             + "; " + cards.get(1).getCardValue() + " " + cards.get(1).getSuit();
@@ -38,14 +34,6 @@ public class Player {
 
     public void setCards(Card card1, Card card2) {
         this.cards = Arrays.asList(card1, card2);
-    }
-
-    public int getChips() {
-        return chips;
-    }
-
-    public void setChips(int chips) {
-        this.chips = chips;
     }
 
     public String getName() {

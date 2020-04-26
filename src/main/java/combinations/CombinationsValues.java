@@ -18,7 +18,7 @@ public enum CombinationsValues {
     STRAIGHTFLUSH(9),
     ROYALFLUSH(10);
 
-    int value;
+    final int value;
     int kicker;
 
     CombinationsValues(int value) {
@@ -52,6 +52,7 @@ public enum CombinationsValues {
         return pairs;
     }
 
+    @SuppressWarnings("SameReturnValue")
     private static CombinationsValues getOnePair(List<Card> playerCards, List<Card> tableCards) {
         var pair = isOnePair(playerCards, tableCards).get(0);
         ONEPAIR.kicker = pair.get(0).getCardValue().getValue();
@@ -77,6 +78,7 @@ public enum CombinationsValues {
         return straights;
     }
 
+    @SuppressWarnings("SameReturnValue")
     private static CombinationsValues getStraight(List<Card> playerCards, List<Card> tableCards) {
         var straights = isStraight(playerCards, tableCards);
         if (straights.size() > 1) {

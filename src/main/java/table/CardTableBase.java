@@ -9,19 +9,17 @@ import player.Player;
 import java.util.*;
 
 public abstract class CardTableBase {
-    protected Queue<Card> deck;
+    protected final Queue<Card> deck;
     protected static Queue<Player> activePlayers;
-    protected List<Player> players;
-    protected List<Card> tableCards;
+    protected final List<Player> players;
+    protected final List<Card> tableCards;
     protected Player winner;
-
-    protected int smallBlind = 25;
-    protected int bigBlind = 50;
 
     public CardTableBase() {
         activePlayers = new ArrayDeque<>();
         players = new ArrayList<>();
         tableCards = new ArrayList<>();
+        deck = new ArrayDeque<>();
         players.add(new Player("Антон Заварка", 1000));
         players.add(new Player("Гей Турчинский", 1000));
         players.add(new Player("Михаил Елдаков", 1000));
@@ -30,8 +28,10 @@ public abstract class CardTableBase {
 
     // инициализация раздачи
     public void initHand() {
-        initDeck();
+        deck.clear();
+        tableCards.clear();
         activePlayers.clear();
+        initDeck();
         activePlayers.addAll(players);
         activePlayers.forEach(x -> x.setInGame(true));
         winner = null;
@@ -52,8 +52,8 @@ public abstract class CardTableBase {
     }
 
     //инициализция колоды
-    void initDeck() {
-        deck = new ArrayDeque<>();
+    private void initDeck() {
+//        deck = new ArrayDeque<>();
         var cards = initCards();
         var random = new Random();
         var index = 0;
@@ -78,9 +78,11 @@ public abstract class CardTableBase {
             noneMatch(x -> somePlayer.getCurrBet() != x.getCurrBet());
     }
 
+    @SuppressWarnings("TextBlockMigration")
     void printCardsOnTheTable() {
         System.out.println("Карты на столе:");
         tableCards.forEach(x -> System.out.print(x.getCardValue() + " " + x.getSuit() + "; "));
+        //noinspection TextBlockMigration
         System.out.println("\n\n");
     }
 
@@ -99,9 +101,6 @@ public abstract class CardTableBase {
 
     public void whoIsWinner() {
         setPlayersCombinations();
-//        activePlayers.forEach(x -> {
-//            x.getCombination()
-//        });
         var winner = activePlayers.poll();
         assert winner != null;
         for (Player player : activePlayers) {
@@ -113,20 +112,25 @@ public abstract class CardTableBase {
         }
     }
 
+    @SuppressWarnings("unused")
+    public abstract void preFlop();
+
+    @SuppressWarnings("unused")
+    public abstract void flop();
+
+    @SuppressWarnings("unused")
+    public abstract void turn();
+
+    @SuppressWarnings("unused")
+    public abstract void river();
+
+
     public Player createPlayer() {
         return new Player("Name", new Random().nextInt() + 1000);
     }
 
     public static Queue<Player> getActivePlayers() {
         return activePlayers;
-    }
-
-    public int getSmallBlind() {
-        return smallBlind;
-    }
-
-    public int getBigBlind() {
-        return bigBlind;
     }
 
     public Player getWinner() {

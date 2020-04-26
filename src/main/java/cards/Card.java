@@ -1,8 +1,8 @@
 package cards;
 
 public class Card implements Comparable<Card> {
-    private CardValues cardValue;
-    private Suit suit;
+    private final CardValues cardValue;
+    private final Suit suit;
 
     public Card(CardValues cardValue, Suit suit) {
         this.cardValue = cardValue;

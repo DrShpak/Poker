@@ -15,7 +15,7 @@ public enum CardValues {
     KING(13),
     ACE(14);
 
-    int value;
+    final int value;
 
     CardValues(int value) {
         this.value = value;

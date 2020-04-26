@@ -1,14 +1,13 @@
 package betting;
 
 import player.Player;
-import table.CardTable;
 import table.CardTableBase;
 
 import java.util.Scanner;
 
 public class BetManager {
     private int pot = 0; // банк
-    private Scanner input;
+    private final Scanner input;
     protected int minBet = 50;
     int currBet = 0; // текущая ставка текущих ранудов торгов
     protected boolean canBet = true; // можно ли сделать ставку?
@@ -20,6 +19,9 @@ public class BetManager {
      */
     protected Betting lastBet;
 
+    private int smallBlind = 25;
+    private int bigBlind = 50;
+
     public BetManager() {
         lastBet = null;
         this.input = new Scanner(System.in);
@@ -30,15 +32,15 @@ public class BetManager {
         return player.getStack() >= betSize;
     }
 
-    public void makeSmallBlind(CardTable table) {
-        makeBlind(table, table.getSmallBlind());
+    public void makeSmallBlind() {
+        makeBlind(smallBlind);
     }
 
-    public void makeBigBlind(CardTable table) {
-        makeBlind(table, table.getBigBlind());
+    public void makeBigBlind() {
+        makeBlind(bigBlind);
     }
 
-    private void makeBlind(CardTable table, int betSize) {
+    private void makeBlind(int betSize) {
         var players = CardTableBase.getActivePlayers();
         assert players.peek() != null;
         var player = players.peek();
@@ -92,7 +94,7 @@ public class BetManager {
         }
     }
 
-    public void resetPlayersCurrBets(CardTable table) {
+    public void resetPlayersCurrBets() {
         CardTableBase.getActivePlayers().forEach(x -> x.setCurrBet(0));
     }
 
@@ -122,5 +124,13 @@ public class BetManager {
 
     public Betting getLastBet() {
         return lastBet;
+    }
+
+    public void setSmallBlind(int smallBlind) {
+        this.smallBlind = smallBlind;
+    }
+
+    public void setBigBlind(int bigBlind) {
+        this.bigBlind = bigBlind;
     }
 }

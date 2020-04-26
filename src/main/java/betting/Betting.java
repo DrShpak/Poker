@@ -15,6 +15,7 @@ public abstract class Betting {
     public Betting() {
     }
 
+    @SuppressWarnings("unused")
     public abstract boolean bet();
 
     protected void printMessageerror(String act) {
@@ -28,6 +29,7 @@ public abstract class Betting {
     }
 
     protected void printGap() {
+        //noinspection TextBlockMigration
         System.out.println("\n\n");
     }
 

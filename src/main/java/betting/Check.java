@@ -1,7 +1,6 @@
 package betting;
 
 import player.Player;
-import table.CardTableBase;
 
 public class Check extends Betting {
     public Check(Player player, BetManager mngr) {

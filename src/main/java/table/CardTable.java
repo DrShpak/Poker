@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 public class CardTable extends CardTableBase {
     private List<List<Card>> combinations;
     private Map<Player, List<Card>> playersCombinations;
-    private BetManager betMngr;
+    private final BetManager betMngr;
 
     public CardTable() {
         super();
@@ -65,7 +65,7 @@ public class CardTable extends CardTableBase {
                 activePlayers.add(currPlayer);
         } while (!isTradeFinished() || (betMngr.getLastBet() instanceof Check && count < activePlayers.size()));
 
-        betMngr.resetPlayersCurrBets(this); // сбрасываем текущие ставки игроков за прошедший раунд торговли
+        betMngr.resetPlayersCurrBets(); // сбрасываем текущие ставки игроков за прошедший раунд торговли
         if (activePlayers.size() == 1)  // если все фолданули , то оставшегося игрока объявляем победителем
             winner = activePlayers.peek();
         betMngr.setLastBet(null);
