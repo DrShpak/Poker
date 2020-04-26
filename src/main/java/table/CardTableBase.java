@@ -7,19 +7,26 @@ import player.Player;
 
 import java.util.*;
 
-public class CardTableBase {
+public abstract class CardTableBase {
     protected Queue<Card> deck;
-    protected Queue<Player> players;
+    protected static Queue<Player> players;
+    protected List<Card> tableCards;
 
     protected int smallBlind = 25;
     protected int bigBlind = 50;
 
     public CardTableBase() {
         players = new ArrayDeque<>();
+        tableCards = new ArrayList<>();
         players.add(new Player("Антон Заварка", 1000));
         players.add(new Player("Гей Турчинский", 1000));
         players.add(new Player("Михаил Елдаков", 1000));
         initDeck();
+    }
+
+    // инициализация раздачи
+    public void initHand() {
+
     }
 
     //инициализация карт
@@ -55,10 +62,16 @@ public class CardTableBase {
         players.add(players.poll());
     }
 
-    public boolean isTradeFinished() {
+    public static boolean isTradeFinished() {
         var somePlayer = players.peek();
         return players.stream().
             noneMatch(x -> somePlayer.getCurrBet() != x.getCurrBet());
+    }
+
+    void printCardsOnTheTable() {
+        System.out.println("Карты на столе:");
+        tableCards.forEach(x -> System.out.print(x.getCardValue() + " " + x.getSuit() + "; "));
+        System.out.println("\n\n");
     }
 
     //выстраиваме нормальный порядок для хода
@@ -68,7 +81,7 @@ public class CardTableBase {
         players.add(players.poll());
     }
 
-    public Queue<Player> getPlayers() {
+    public static Queue<Player> getPlayers() {
         return players;
     }
 

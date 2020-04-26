@@ -1,5 +1,6 @@
 package player;
 
+import betting.Betting;
 import cards.Card;
 import combinations.CombinationUtils;
 
@@ -11,7 +12,6 @@ public class Player {
     private List<Card> cards;
     private int chips;
     private int stack; // общий банк игрока
-    private int currentPot; // текущий банк ВСЕЙ текущей игры
     private int currBet; // текущая ставка текущего РАУНДА
     private boolean isDealer;
     private boolean isInGame;
@@ -21,26 +21,6 @@ public class Player {
         this.name = name;
         this.stack = overallPot;
         this.isInGame = true;
-    }
-
-    public void makeBet(int bet) {
-        currentPot += bet;
-    }
-
-    //job - слив денег
-    public void job() {
-        stack -= currentPot;
-        currentPot = 0;
-    }
-
-    public void takePot(int pot) {
-        stack += pot;
-        currentPot = 0;
-    }
-
-    public void resetCurrPot() {
-        currentPot = 0;
-        currBet = 0;
     }
 
     public List<Card> getCards() {
@@ -67,10 +47,6 @@ public class Player {
         return stack;
     }
 
-    public int getCurrentPot() {
-        return currentPot;
-    }
-
     public boolean isInGame() {
         return isInGame;
     }
@@ -81,10 +57,6 @@ public class Player {
 
     public void setStack(int stack) {
         this.stack = stack;
-    }
-
-    public void setCurrentPot(int currentPot) {
-        this.currentPot = currentPot;
     }
 
     public void setDealer(boolean dealer) {

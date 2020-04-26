@@ -11,17 +11,22 @@ public class ConsoleUI {
 
     public void startGame() {
         while (true) {
-            cardTable.setDealer();
-            cardTable.getBetMngr().makeSmallBlind(cardTable);
-            cardTable.getBetMngr().makeBigBlind(cardTable);
-            cardTable.preFlop();
-            cardTable.tradeRound();
-            cardTable.flop();
-            cardTable.tradeRound();
-            cardTable.turn();
-            cardTable.tradeRound();
-            cardTable.river();
-            cardTable.tradeRound();
+
+            hand();
         }
+    }
+
+    private void hand() {
+        cardTable.setDealer();
+        cardTable.getBetMngr().makeSmallBlind(cardTable);
+        cardTable.getBetMngr().makeBigBlind(cardTable);
+        cardTable.preFlop();
+        cardTable.tradeRound();
+        cardTable.flop();
+        cardTable.tradeRound();
+        cardTable.turn();
+        cardTable.tradeRound();
+        cardTable.river();
+        cardTable.tradeRound();
     }
 }
