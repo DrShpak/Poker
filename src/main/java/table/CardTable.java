@@ -53,7 +53,8 @@ public class CardTable extends CardTableBase {
             assert currPlayer != null;
             System.out.println("Player " + currPlayer.getName() + " is making a bet...");
             System.out.println(String.format("Current bet %s's = %d$", currPlayer.getName(), currPlayer.getCurrBet()));
-            printListOfActs();
+            if (currPlayer.getThread() == null)
+                printListOfActs();
             betMngr.bet(currPlayer); // делает ставку
             count++;
 
@@ -64,9 +65,11 @@ public class CardTable extends CardTableBase {
         } while (!isTradeFinished() || (betMngr.getLastBet() instanceof Check && count < activePlayers.size()));
 
         betMngr.resetPlayersCurrBets(); // сбрасываем текущие ставки игроков за прошедший раунд торговли
-        if (activePlayers.size() == 1)  // если все фолданули , то оставшегося игрока объявляем победителем
+        if (activePlayers.size() == 1) { // если все фолданули , то оставшегося игрока объявляем победителем
             winner = activePlayers.peek();
-        betMngr.setLastBet(null);
+            winnerTakePot(winner, betMngr.getPot());
+        }
+        betMngr.setLastBet(null);  // обнулили последнюю ставку
         /*
           восстанавливаем правильный порядок. когда все уровнялись, очередь закончилась на том
           кто зарейзил

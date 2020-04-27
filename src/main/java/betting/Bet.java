@@ -2,6 +2,7 @@ package betting;
 
 import player.Player;
 
+import java.util.Random;
 import java.util.Scanner;
 
 public class Bet extends Betting {
@@ -14,13 +15,20 @@ public class Bet extends Betting {
 
     @Override
     public boolean bet() {
-        if (mngr.canBet) {
-            System.out.print("Input your bet: ");
-            var betSize = Integer.parseInt(new Scanner(System.in).nextLine());
+        if (isAvailable()) {
+            var betSize = 0;
+            if (player.getThread() == null) {
+                System.out.print("Input your bet: ");
+                betSize = Integer.parseInt(new Scanner(System.in).nextLine());
+            } else {
+                betSize = new Random().nextInt(player.getStack());
+            }
             if (mngr.isPotEnough(player, betSize) && betSize >= mngr.minBet) {
                 takeMoney(player, betSize);
                 mngr.currBet = betSize;
                 increasePot(betSize);
+                printMadeBet("bet");
+                System.out.println(betSize + "$");
                 printGap();
                 mngr.canBet = false; //больше ставить нельзя (только колл, рейз, фолд)
                 return true;
@@ -31,5 +39,10 @@ public class Bet extends Betting {
         }
         printMessageerror("bet");
         return false;
+    }
+
+    @Override
+    public boolean isAvailable() {
+        return mngr.canBet;
     }
 }

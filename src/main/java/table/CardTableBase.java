@@ -23,9 +23,10 @@ public abstract class CardTableBase {
         tableCards = new ArrayList<>();
         deck = new ArrayDeque<>();
         betMngr = new BetManager();
-        players.add(new Player("Антон Заварка", 1000));
-        players.add(new Player("Гей Турчинский", 1000));
-        players.add(new Player("Михаил Елдаков", 1000));
+        players.add(new Player("Антон Заварка", 1000, betMngr));
+        players.add(new Player("Гей Турчинский", 1000, betMngr));
+        players.add(new Player("Михаил Елдаков", 1000, betMngr));
+//        players.add(new Player("Дмитрий \"Доктор Шпак\" Титов", 1000));
         initHand();
     }
 

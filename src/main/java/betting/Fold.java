@@ -12,11 +12,17 @@ public class Fold extends Betting {
 
     @Override
     public boolean bet() {
-        if (mngr.canBet || (mngr.lastBet instanceof Check)) {
+        if (isAvailable()) {
             printMessageerror("fold");
             return false;
         }
+        printMadeBet("fold");
         printGap();
         return true;
+    }
+
+    @Override
+    public boolean isAvailable() {
+        return !(mngr.canBet || (mngr.lastBet instanceof Check));
     }
 }

@@ -1,12 +1,13 @@
 package player;
 
+import betting.BetManager;
 import cards.Card;
 import combinations.CombinationsValues;
 
 import java.util.Arrays;
 import java.util.List;
 
-public class Player {
+public class Player implements Runnable {
     @SuppressWarnings("CanBeFinal")
     private String name;
     private List<Card> cards;
@@ -15,11 +16,23 @@ public class Player {
     private boolean isDealer;
     private boolean isInGame;
     private CombinationsValues combination;
+    private Thread thread;
+    private boolean suspend;
+    private BetManager mngr;
+
+    public Player(String name, int overallPot, BetManager mngr) {
+        this.name = name;
+        this.stack = overallPot;
+        this.mngr = mngr;
+        thread = new Thread(this, name);
+        suspend = true;
+        thread.start();
+        mySuspend();
+    }
 
     public Player(String name, int overallPot) {
         this.name = name;
         this.stack = overallPot;
-        this.isInGame = true;
     }
 
     public List<Card> getCards() {
@@ -78,5 +91,35 @@ public class Player {
 
     public CombinationsValues getCombination() {
         return combination;
+    }
+
+    @Override
+    public void run() {
+        try {
+            synchronized (this) {
+                while (suspend) {
+                    wait();
+                }
+                System.out.println(name + " Проснулся!!");
+                mngr.betForBot(this);
+                mySuspend();
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public synchronized void mySuspend() {
+        suspend = true;
+    }
+
+    public synchronized void notifyPlayer() {
+        suspend = false;
+        System.out.println("будим " + name);
+        notify();
+    }
+
+    public Thread getThread() {
+        return thread;
     }
 }

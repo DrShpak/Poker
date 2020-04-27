@@ -6,10 +6,12 @@ import player.Player;
 public abstract class Betting {
     protected Player player;
     protected BetManager mngr;
+    protected static boolean isAvailable;
 
     public Betting(Player player, BetManager mngr) {
         this.player = player;
         this.mngr = mngr;
+        isAvailable = isAvailable();
     }
 
     public Betting() {
@@ -18,9 +20,16 @@ public abstract class Betting {
     @SuppressWarnings("unused")
     public abstract boolean bet();
 
+    @SuppressWarnings("unused")
+    public abstract boolean isAvailable();
+
     protected void printMessageerror(String act) {
         System.out.println("You cannot make \"" + act + "\"");
         System.out.print("Make another choice: ");
+    }
+
+    protected void printMadeBet(String bet) {
+        System.out.print(player.getName() + " made " + bet + " ");
     }
 
     protected void takeMoney(Player player, int betSize) {

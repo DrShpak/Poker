@@ -12,11 +12,17 @@ public class Check extends Betting {
 
     @Override
     public boolean bet() {
-        if (mngr.getPot() != 0 && ((mngr.lastBet instanceof Check) || (mngr.lastBet == null))) {
+        if (isAvailable()) {
+            printMadeBet("check");
             printGap();
             return true;
         }
         printMessageerror("check");
         return false;
+    }
+
+    @Override
+    public boolean isAvailable() {
+        return mngr.getPot() != 0 && ((mngr.lastBet instanceof Check) || (mngr.lastBet == null));
     }
 }

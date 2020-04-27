@@ -1,9 +1,12 @@
 package betting;
 
+import org.reflections.Reflections;
 import player.Player;
 import table.CardTableBase;
 
-import java.util.Scanner;
+import java.lang.reflect.InvocationTargetException;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class BetManager {
     private int pot = 0; // банк
@@ -54,7 +57,7 @@ public class BetManager {
         currBet = 0;
     }
 
-    public void bet(Player player) {
+    public void betForReal(Player player) {
         var flag = true; // крутим свитч до тех пор, пока не будет выбран корректный ход
         while (flag) {
             switch (input.nextLine()) {
@@ -92,6 +95,31 @@ public class BetManager {
                 default -> System.out.print("Unknown command! Try again: ");
             }
         }
+    }
+
+    public void bet(Player player) {
+        if (player.getThread() == null) {
+            betForReal(player);
+        } else {
+            player.notifyPlayer();
+        }
+    }
+
+    public void betForBot(Player player) {
+        Reflections allBets = new Reflections("betting");
+        var availableBets = allBets.getSubTypesOf(Betting.class).stream().
+            map(x -> {
+                try {
+                    return x.getDeclaredConstructor(Player.class, BetManager.class).newInstance(player, this);
+                } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }).
+            filter(Objects::nonNull).
+            filter(Betting::isAvailable).
+            collect(Collectors.toList());
+        availableBets.get(new Random().nextInt(availableBets.size())).bet();
     }
 
     public void resetPlayersCurrBets() {

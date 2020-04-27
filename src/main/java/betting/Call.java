@@ -12,14 +12,22 @@ public class Call extends Betting {
 
     @Override
     public boolean bet() {
-        if (mngr.isPotEnough(player, mngr.currBet - player.getCurrBet()) && !mngr.canBet) {
-            increasePot(mngr.currBet - player.getCurrBet());
-            takeMoney(player, mngr.currBet - player.getCurrBet());
+        if (isAvailable()) {
+            var betSize = mngr.currBet - player.getCurrBet();
+            increasePot(betSize);
+            takeMoney(player, betSize);
+            printMadeBet("call");
+            System.out.println(betSize + "$");
             printGap();
             return true;
         } else {
             printMessageerror("call");
             return false;
         }
+    }
+
+    @Override
+    public boolean isAvailable() {
+        return mngr.isPotEnough(player, mngr.currBet - player.getCurrBet()) && !mngr.canBet;
     }
 }
