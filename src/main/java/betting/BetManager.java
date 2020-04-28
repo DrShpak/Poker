@@ -101,7 +101,7 @@ public class BetManager {
         if (player.getThread() == null) {
             betForReal(player);
         } else {
-            player.notifyPlayer();
+            player.notifyBot();
         }
     }
 

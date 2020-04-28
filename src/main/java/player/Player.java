@@ -137,7 +137,7 @@ public class Player implements Runnable {
         suspend = true;
     }
 
-    public synchronized void notifyPlayer() {
+    public synchronized void notifyBot() {
         suspend = false;
         System.out.println("будим " + name);
         notify();
