@@ -15,7 +15,7 @@ public class Bet extends Betting {
 
     @Override
     public boolean bet() {
-        if (isAvailable()) {
+        if (isAvailable) {
             var betSize = 0;
             if (player.getThread() == null) {
                 System.out.print("Input your bet: ");

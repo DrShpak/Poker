@@ -105,7 +105,7 @@ public class BetManager {
         }
     }
 
-    public void betForBot(Player player) {
+    public synchronized void betForBot(Player player) {
         Reflections allBets = new Reflections("betting");
         var availableBets = allBets.getSubTypesOf(Betting.class).stream().
             map(x -> {
@@ -160,5 +160,13 @@ public class BetManager {
 
     public void setBigBlind(int bigBlind) {
         this.bigBlind = bigBlind;
+    }
+
+    public int getSmallBlind() {
+        return smallBlind;
+    }
+
+    public int getBigBlind() {
+        return bigBlind;
     }
 }

@@ -17,7 +17,7 @@ public class Raise extends Betting {
 
     @Override
     public boolean bet() {
-        if (isAvailable()) {
+        if (isAvailable) {
             increasePot(betSize - player.getCurrBet());
             takeMoney(player, betSize - player.getCurrBet());
             mngr.currBet = betSize;

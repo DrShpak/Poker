@@ -12,7 +12,7 @@ public class Check extends Betting {
 
     @Override
     public boolean bet() {
-        if (isAvailable()) {
+        if (isAvailable) {
             printMadeBet("check");
             printGap();
             return true;
@@ -23,6 +23,6 @@ public class Check extends Betting {
 
     @Override
     public boolean isAvailable() {
-        return mngr.getPot() != 0 && ((mngr.lastBet instanceof Check) || (mngr.lastBet == null));
+        return mngr.getPot() != mngr.getSmallBlind() + mngr.getBigBlind() && ((mngr.lastBet instanceof Check) || (mngr.lastBet == null));
     }
 }

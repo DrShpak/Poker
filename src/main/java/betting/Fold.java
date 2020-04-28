@@ -12,13 +12,14 @@ public class Fold extends Betting {
 
     @Override
     public boolean bet() {
-        if (isAvailable()) {
+        if (isAvailable) {
+            printMadeBet("fold");
+            printGap();
             printMessageerror("fold");
-            return false;
+            return true;
         }
-        printMadeBet("fold");
-        printGap();
-        return true;
+        printMessageerror("fold");
+        return false;
     }
 
     @Override

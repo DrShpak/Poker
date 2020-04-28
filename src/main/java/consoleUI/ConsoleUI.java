@@ -18,6 +18,7 @@ public class ConsoleUI {
             hand();
             System.out.print("Do you want to continue? y/n: ");
         } while (!input.nextLine().equals("n"));
+        table.getPlayers().forEach(x -> x.setGameContinue(false));
     }
 
     private void hand() {
@@ -52,5 +53,7 @@ public class ConsoleUI {
         }
         table.tradeRound();
         table.whoIsWinner();
+        System.out.println("Winner is " + table.getWinner().getName());
+        table.showCombinations();
     }
 }

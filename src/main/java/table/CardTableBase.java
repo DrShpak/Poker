@@ -4,7 +4,7 @@ import betting.BetManager;
 import cards.Card;
 import cards.CardValues;
 import cards.Suit;
-import combinations.CombinationsValues;
+import combinations.Combination;
 import player.Player;
 
 import java.util.*;
@@ -23,10 +23,12 @@ public abstract class CardTableBase {
         tableCards = new ArrayList<>();
         deck = new ArrayDeque<>();
         betMngr = new BetManager();
-        players.add(new Player("Антон Заварка", 1000, betMngr));
-        players.add(new Player("Гей Турчинский", 1000, betMngr));
-        players.add(new Player("Михаил Елдаков", 1000, betMngr));
-//        players.add(new Player("Дмитрий \"Доктор Шпак\" Титов", 1000));
+//        players.add(Player.createBot("Антон Заварка", 1000, this, betMngr));
+//        players.add(Player.createBot("Гей Турчинский", 1000, this, betMngr));
+//        players.add(Player.createBot("Михаил Елдаков", 1000, this, betMngr));
+        players.add(Player.createPlayer("Дмитрий \"Доктор Шпак\" Титов", 1000, this));
+        players.add(Player.createPlayer("Анатолий Кринжовик", 1000, this));
+        players.add(Player.createPlayer("Узколобый мещанин", 1000, this));
         initHand();
     }
 
@@ -95,26 +97,23 @@ public abstract class CardTableBase {
     public void setOrder() {
         while (!Objects.requireNonNull(activePlayers.peek()).isDealer())
             activePlayers.add(activePlayers.poll());
-//        activePlayers.add(activePlayers.poll());
     }
 
-    private void setPlayersCombinations() {
-        for (Player player : activePlayers) {
-            player.setCombination(CombinationsValues.getCombination(player.getCards(), tableCards));
-        }
+    public void showCombinations() {
+        this.players.
+            stream().
+            map(x -> Map.entry(x, Combination.generate(x))).
+            forEach(x -> System.out.println(x.getKey().getName() + ": " + x.getValue().getDesc().getName()));
     }
 
     public void whoIsWinner() {
-        setPlayersCombinations();
-        var winner = activePlayers.poll();
-        assert winner != null;
-        for (Player player : activePlayers) {
-            if (player.getCombination().getValue() > winner.getCombination().getValue())
-                winner = player;
-            if (player.getCombination().getValue() == winner.getCombination().getValue()
-                && player.getCombination().getKicker() > winner.getCombination().getKicker())
-                winner = player;
-        }
+        //noinspection OptionalGetWithoutIsPresent
+        this.winner = this.players.
+            stream().
+            map(x -> Map.entry(x, Combination.generate(x))).
+            max(Map.Entry.comparingByValue()).
+            get().
+            getKey();
     }
 
     @SuppressWarnings("unused")
@@ -129,11 +128,6 @@ public abstract class CardTableBase {
     @SuppressWarnings("unused")
     public abstract void river();
 
-
-    public Player createPlayer() {
-        return new Player("Name", new Random().nextInt() + 1000);
-    }
-
     public static Queue<Player> getActivePlayers() {
         return activePlayers;
     }
@@ -142,15 +136,19 @@ public abstract class CardTableBase {
         return winner;
     }
 
-    public void setWinner(Player winner) {
-        this.winner = winner;
-    }
-
     public BetManager getBetMngr() {
         return betMngr;
     }
 
     public void winnerTakePot(Player player, int pot) {
         player.setStack(player.getStack() + pot);
+    }
+
+    public List<Card> getTableCards() {
+        return tableCards;
+    }
+
+    public List<Player> getPlayers() {
+        return players;
     }
 }

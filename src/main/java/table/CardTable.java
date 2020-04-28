@@ -1,6 +1,5 @@
 package table;
 
-import betting.BetManager;
 import betting.Check;
 import cards.Card;
 import player.Player;
@@ -9,8 +8,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class CardTable extends CardTableBase {
-    private List<List<Card>> combinations;
-    private Map<Player, List<Card>> playersCombinations;
 
     public CardTable() {
         super();

@@ -12,7 +12,7 @@ public class Call extends Betting {
 
     @Override
     public boolean bet() {
-        if (isAvailable()) {
+        if (isAvailable) {
             var betSize = mngr.currBet - player.getCurrBet();
             increasePot(betSize);
             takeMoney(player, betSize);
