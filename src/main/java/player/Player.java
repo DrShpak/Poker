@@ -21,6 +21,7 @@ public class Player implements Runnable {
     private Thread thread;
     private boolean suspend;
     private boolean gameContinue;
+    private boolean hasButton;
     private BetManager mngr;
 
     public Player(String name, int overallPot, BetManager mngr) {
@@ -149,5 +150,13 @@ public class Player implements Runnable {
 
     public void setGameContinue(boolean gameContinue) {
         this.gameContinue = gameContinue;
+    }
+
+    public boolean isHasButton() {
+        return hasButton;
+    }
+
+    public void setHasButton(boolean hasButton) {
+        this.hasButton = hasButton;
     }
 }

@@ -2,11 +2,9 @@ package betting;
 
 import player.Player;
 
-import java.util.Random;
 import java.util.Scanner;
 
 public class Raise extends Betting {
-    private int betSize;
 
     public Raise(Player player, BetManager mngr) {
         super(player, mngr);
@@ -18,6 +16,17 @@ public class Raise extends Betting {
     @Override
     public boolean bet() {
         if (isAvailable) {
+            int betSize;
+            if (player.getThread() == null) {
+                System.out.print("Input your bet: ");
+                betSize = Integer.parseInt(new Scanner(System.in).nextLine());
+                if (betSize <= mngr.currBet) {
+                    System.out.println("You must bet more than " + mngr.currBet + "$");
+                    return false;
+                }
+            } else {
+                betSize = (int) (Math.random() * (player.getStack() - mngr.currBet)) + mngr.currBet;
+            }
             increasePot(betSize - player.getCurrBet());
             takeMoney(player, betSize - player.getCurrBet());
             mngr.currBet = betSize;
@@ -33,14 +42,6 @@ public class Raise extends Betting {
 
     @Override
     public boolean isAvailable() {
-        if (player.getThread() == null) {
-            System.out.print("Input your bet: ");
-            betSize = Integer.parseInt(new Scanner(System.in).nextLine());
-        } else {
-            if (player.getStack() < mngr.currBet)
-                return false;
-            betSize = (int) (Math.random() * (player.getStack() - mngr.minBet)) + mngr.minBet;
-        }
-        return mngr.isPotEnough(player, betSize - player.getCurrBet()) && betSize >= mngr.currBet && !mngr.canBet;
+        return !mngr.canBet && player.getStack() > mngr.currBet;
     }
 }

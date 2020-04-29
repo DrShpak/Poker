@@ -23,12 +23,13 @@ public abstract class CardTableBase {
         tableCards = new ArrayList<>();
         deck = new ArrayDeque<>();
         betMngr = new BetManager();
-        players.add(Player.createBot("Антон Заварка", 1000, this, betMngr));
-        players.add(Player.createBot("Гей Турчинский", 1000, this, betMngr));
-        players.add(Player.createBot("Михаил Елдаков", 1000, this, betMngr));
-//        players.add(Player.createPlayer("Дмитрий \"Доктор Шпак\" Титов", 1000, this));
-//        players.add(Player.createPlayer("Анатолий Кринжовик", 1000, this));
-//        players.add(Player.createPlayer("Узколобый мещанин", 1000, this));
+//        players.add(Player.createBot("Антон Заварка", 1000, this, betMngr));
+//        players.add(Player.createBot("Гей Турчинский", 1000, this, betMngr));
+//        players.add(Player.createBot("Михаил Елдаков", 1000, this, betMngr));
+        players.add(Player.createPlayer("Дмитрий \"Доктор Шпак\" Титов", 2000, this));
+        players.add(Player.createPlayer("Анатолий Кринжовик", 3000, this));
+        players.add(Player.createPlayer("Узколобый мещанин", 1000, this));
+//        players.add(Player.createPlayer("Гей Турчинский", 1000, this));
         initHand();
     }
 
@@ -60,7 +61,6 @@ public abstract class CardTableBase {
 
     //инициализция колоды
     private void initDeck() {
-//        deck = new ArrayDeque<>();
         var cards = initCards();
         var random = new Random();
         var index = 0;
@@ -73,9 +73,11 @@ public abstract class CardTableBase {
 
     // установка диллера
     public void setDealer() {
-        assert activePlayers.peek() != null;
-        activePlayers.peek().setDealer(true);
-        activePlayers.add(activePlayers.poll());
+        var temp = activePlayers.poll();
+        assert temp != null;
+        temp.setDealer(true);
+        temp.setHasButton(true);
+        activePlayers.add(temp);
     }
 
     // проверка окончания торгов
@@ -95,7 +97,7 @@ public abstract class CardTableBase {
 
     //выстраиваме нормальный порядок для хода
     public void setOrder() {
-        while (!Objects.requireNonNull(activePlayers.peek()).isDealer())
+        while (!Objects.requireNonNull(activePlayers.peek()).isHasButton())
             activePlayers.add(activePlayers.poll());
     }
 
@@ -103,7 +105,8 @@ public abstract class CardTableBase {
         activePlayers.
             stream().
             map(x -> Map.entry(x, Combination.generate(x))).
-            forEach(x -> System.out.println(x.getKey().getName() + ": " + x.getValue().getDesc().getName()));
+            forEach(x -> System.out.println(x.getKey().getName() + ": "
+                + x.getKey().showCards() + " -- " + x.getValue().getDesc().getName()));
     }
 
     public void whoIsWinner() {

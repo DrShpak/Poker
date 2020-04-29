@@ -21,6 +21,7 @@ public class BetManager {
      нужно либо коллировать, либо рейзить
      */
     protected Betting lastBet;
+    private boolean isAllIn = false;
 
     private int smallBlind = 25;
     private int bigBlind = 50;
@@ -89,6 +90,12 @@ public class BetManager {
                     if (new Fold(player, this).bet()) {
                         flag = false;
                         lastBet = new Fold();
+                    }
+                }
+                case "all-in" -> {
+                    if (new AllIn(player, this).bet()) {
+                        flag = false;
+                        lastBet = new AllIn();
                     }
                 }
                 default -> System.out.print("Unknown command! Try again: ");
@@ -173,5 +180,13 @@ public class BetManager {
 
     public int getMinBet() {
         return minBet;
+    }
+
+    public boolean isIsAllIn() {
+        return isAllIn;
+    }
+
+    public void setIsAllIn(boolean isAllIn) {
+        this.isAllIn = isAllIn;
     }
 }

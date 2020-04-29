@@ -1,6 +1,9 @@
 package betting;
 
 import player.Player;
+import table.CardTableBase;
+
+import java.util.Objects;
 
 public class Fold extends Betting {
     public Fold(Player player, BetManager mngr) {
@@ -16,6 +19,9 @@ public class Fold extends Betting {
             printMadeBet("fold");
             printGap();
             player.setInGame(false);
+            if (player.isHasButton())
+                // передаем кнопку далее сидящему
+                Objects.requireNonNull(CardTableBase.getActivePlayers().peek()).setHasButton(true);
             return true;
         }
         printMessageerror("fold");

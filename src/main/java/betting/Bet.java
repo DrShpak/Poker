@@ -2,7 +2,6 @@ package betting;
 
 import player.Player;
 
-import java.util.Random;
 import java.util.Scanner;
 
 public class Bet extends Betting {
