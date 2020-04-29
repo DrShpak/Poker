@@ -31,6 +31,6 @@ public class AllIn extends Betting {
 
     @Override
     public boolean isAvailable() {
-        return true;
+        return player.getStack() > 0 && !mngr.canBet;
     }
 }

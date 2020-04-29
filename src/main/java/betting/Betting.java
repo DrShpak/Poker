@@ -23,7 +23,7 @@ public abstract class Betting {
     @SuppressWarnings("unused")
     public abstract boolean isAvailable();
 
-    protected void printMessageerror(String act) {
+    protected void printMessageError(String act) {
         System.out.println("You cannot make \"" + act + "\"");
         System.out.print("Make another choice: ");
     }

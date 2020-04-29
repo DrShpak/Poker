@@ -24,7 +24,7 @@ public class Fold extends Betting {
                 Objects.requireNonNull(CardTableBase.getActivePlayers().peek()).setHasButton(true);
             return true;
         }
-        printMessageerror("fold");
+        printMessageError("fold");
         return false;
     }
 

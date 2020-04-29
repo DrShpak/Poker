@@ -70,7 +70,7 @@ public class CardTable extends CardTableBase {
         betMngr.resetPlayersCurrBets(); // сбрасываем текущие ставки игроков за прошедший раунд торговли
         if (activePlayers.size() == 1) { // если все фолданули , то оставшегося игрока объявляем победителем
             winner = activePlayers.peek();
-            winnerTakePot(winner, betMngr.getPot());
+            betMngr.takePot(winner);
         }
         betMngr.setLastBet(null);  // обнулили последнюю ставку
         /*

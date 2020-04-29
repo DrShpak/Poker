@@ -130,6 +130,10 @@ public class BetManager {
         lastBet = botBet;
     }
 
+    public void takePot(Player winner) {
+        winner.setStack(winner.getStack() + pot);
+    }
+
     public void resetPlayersCurrBets() {
         CardTableBase.getActivePlayers().forEach(x -> x.setCurrBet(0));
     }

@@ -17,7 +17,7 @@ public class Check extends Betting {
             printGap();
             return true;
         }
-        printMessageerror("check");
+        printMessageError("check");
         return false;
     }
 

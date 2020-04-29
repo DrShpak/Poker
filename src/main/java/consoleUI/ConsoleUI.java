@@ -55,6 +55,7 @@ public class ConsoleUI {
         }
         table.tradeRound();
         table.whoIsWinner();
+        table.getBetMngr().takePot(table.getWinner());
         System.out.println("Winner is " + table.getWinner().getName());
         table.showCombinations();
         CardTableBase.getActivePlayers().forEach(Player::showCards);

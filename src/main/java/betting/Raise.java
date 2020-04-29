@@ -35,7 +35,7 @@ public class Raise extends Betting {
             printGap();
             return true;
         } else {
-            printMessageerror("raise");
+            printMessageError("raise");
             return false;
         }
     }

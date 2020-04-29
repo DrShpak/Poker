@@ -23,12 +23,12 @@ public abstract class CardTableBase {
         tableCards = new ArrayList<>();
         deck = new ArrayDeque<>();
         betMngr = new BetManager();
-//        players.add(Player.createBot("Антон Заварка", 1000, this, betMngr));
-//        players.add(Player.createBot("Гей Турчинский", 1000, this, betMngr));
-//        players.add(Player.createBot("Михаил Елдаков", 1000, this, betMngr));
-        players.add(Player.createPlayer("Дмитрий \"Доктор Шпак\" Титов", 2000, this));
-        players.add(Player.createPlayer("Анатолий Кринжовик", 3000, this));
-        players.add(Player.createPlayer("Узколобый мещанин", 1000, this));
+        players.add(Player.createBot("Антон Заварка", 1000, this, betMngr));
+        players.add(Player.createBot("Гей Турчинский", 1000, this, betMngr));
+        players.add(Player.createBot("Михаил Елдаков", 1000, this, betMngr));
+//        players.add(Player.createPlayer("Дмитрий \"Доктор Шпак\" Титов", 2000, this));
+//        players.add(Player.createPlayer("Анатолий Кринжовик", 3000, this));
+//        players.add(Player.createPlayer("Узколобый мещанин", 1000, this));
 //        players.add(Player.createPlayer("Гей Турчинский", 1000, this));
         initHand();
     }
@@ -38,11 +38,13 @@ public abstract class CardTableBase {
         deck.clear();
         tableCards.clear();
         activePlayers.clear();
+        addMoney();
         initDeck();
         betMngr.setPot(0);
         activePlayers.addAll(players);
         activePlayers.forEach(x -> x.setInGame(true));
         winner = null;
+        betMngr.setIsAllIn(false);
     }
 
     //инициализация карт
@@ -119,6 +121,12 @@ public abstract class CardTableBase {
             getKey();
     }
 
+    private void addMoney() {
+        players.stream().
+            filter(x -> x.getStack() < betMngr.getBigBlind()).
+            forEach(x -> x.setStack(2000));
+    }
+
     @SuppressWarnings("unused")
     public abstract void preFlop();
 
@@ -141,10 +149,6 @@ public abstract class CardTableBase {
 
     public BetManager getBetMngr() {
         return betMngr;
-    }
-
-    public void winnerTakePot(Player player, int pot) {
-        player.setStack(player.getStack() + pot);
     }
 
     public List<Card> getTableCards() {

@@ -36,7 +36,7 @@ public class Bet extends Betting {
                 return false;
             }
         }
-        printMessageerror("bet");
+        printMessageError("bet");
         return false;
     }
 

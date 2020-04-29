@@ -21,7 +21,7 @@ public class Call extends Betting {
             printGap();
             return true;
         } else {
-            printMessageerror("call");
+            printMessageError("call");
             return false;
         }
     }
