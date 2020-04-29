@@ -23,12 +23,12 @@ public abstract class CardTableBase {
         tableCards = new ArrayList<>();
         deck = new ArrayDeque<>();
         betMngr = new BetManager();
-//        players.add(Player.createBot("Антон Заварка", 1000, this, betMngr));
-//        players.add(Player.createBot("Гей Турчинский", 1000, this, betMngr));
-//        players.add(Player.createBot("Михаил Елдаков", 1000, this, betMngr));
-        players.add(Player.createPlayer("Дмитрий \"Доктор Шпак\" Титов", 1000, this));
-        players.add(Player.createPlayer("Анатолий Кринжовик", 1000, this));
-        players.add(Player.createPlayer("Узколобый мещанин", 1000, this));
+        players.add(Player.createBot("Антон Заварка", 1000, this, betMngr));
+        players.add(Player.createBot("Гей Турчинский", 1000, this, betMngr));
+        players.add(Player.createBot("Михаил Елдаков", 1000, this, betMngr));
+//        players.add(Player.createPlayer("Дмитрий \"Доктор Шпак\" Титов", 1000, this));
+//        players.add(Player.createPlayer("Анатолий Кринжовик", 1000, this));
+//        players.add(Player.createPlayer("Узколобый мещанин", 1000, this));
         initHand();
     }
 
@@ -79,7 +79,7 @@ public abstract class CardTableBase {
     }
 
     // проверка окончания торгов
-    public static boolean isTradeFinished() {
+    public boolean isTradeFinished() {
         var somePlayer = activePlayers.peek();
         return activePlayers.stream().
             noneMatch(x -> somePlayer.getCurrBet() != x.getCurrBet());
@@ -100,7 +100,7 @@ public abstract class CardTableBase {
     }
 
     public void showCombinations() {
-        this.players.
+        activePlayers.
             stream().
             map(x -> Map.entry(x, Combination.generate(x))).
             forEach(x -> System.out.println(x.getKey().getName() + ": " + x.getValue().getDesc().getName()));
@@ -108,7 +108,7 @@ public abstract class CardTableBase {
 
     public void whoIsWinner() {
         //noinspection OptionalGetWithoutIsPresent
-        this.winner = this.players.
+        this.winner = activePlayers.
             stream().
             map(x -> Map.entry(x, Combination.generate(x))).
             max(Map.Entry.comparingByValue()).

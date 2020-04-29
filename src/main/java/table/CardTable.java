@@ -36,6 +36,7 @@ public class CardTable extends CardTableBase {
         printCardsOnTheTable();
     }
 
+    @SuppressWarnings("StatementWithEmptyBody")
     public void tradeRound() {
         betMngr.setCanBet(true); // первому игроку можно совершитьс ставку
         betMngr.resetCurrBet(); // сбрасываем текущую ставку (ну то есть каждый раунд торговли новая текущая ставка)
@@ -51,7 +52,10 @@ public class CardTable extends CardTableBase {
             System.out.println(String.format("Current bet %s's = %d$", currPlayer.getName(), currPlayer.getCurrBet()));
             if (currPlayer.getThread() == null)
                 printListOfActs();
-            betMngr.bet(currPlayer); // делает ставку
+            betMngr.betForBot(currPlayer); // делает ставку
+            while (currPlayer.getThread().getState() != Thread.State.WAITING) {
+
+            }
             count++;
 
             activePlayers = activePlayers.stream().filter(Player::isInGame) // выыбрасываем тех, кто сделал фолд

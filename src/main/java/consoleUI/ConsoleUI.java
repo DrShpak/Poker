@@ -1,6 +1,8 @@
 package consoleUI;
 
+import player.Player;
 import table.CardTable;
+import table.CardTableBase;
 
 import java.util.Scanner;
 
@@ -55,5 +57,6 @@ public class ConsoleUI {
         table.whoIsWinner();
         System.out.println("Winner is " + table.getWinner().getName());
         table.showCombinations();
+        CardTableBase.getActivePlayers().forEach(Player::showCards);
     }
 }

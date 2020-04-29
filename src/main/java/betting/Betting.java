@@ -6,7 +6,7 @@ import player.Player;
 public abstract class Betting {
     protected Player player;
     protected BetManager mngr;
-    protected static boolean isAvailable;
+    protected boolean isAvailable;
 
     public Betting(Player player, BetManager mngr) {
         this.player = player;

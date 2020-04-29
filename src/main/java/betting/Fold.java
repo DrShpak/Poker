@@ -15,7 +15,7 @@ public class Fold extends Betting {
         if (isAvailable) {
             printMadeBet("fold");
             printGap();
-            printMessageerror("fold");
+            player.setInGame(false);
             return true;
         }
         printMessageerror("fold");

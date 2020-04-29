@@ -37,7 +37,9 @@ public class Raise extends Betting {
             System.out.print("Input your bet: ");
             betSize = Integer.parseInt(new Scanner(System.in).nextLine());
         } else {
-            betSize = new Random().nextInt(player.getStack());
+            if (player.getStack() < mngr.currBet)
+                return false;
+            betSize = (int) (Math.random() * (player.getStack() - mngr.minBet)) + mngr.minBet;
         }
         return mngr.isPotEnough(player, betSize - player.getCurrBet()) && betSize >= mngr.currBet && !mngr.canBet;
     }

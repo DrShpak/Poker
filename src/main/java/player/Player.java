@@ -29,9 +29,9 @@ public class Player implements Runnable {
         this.mngr = mngr;
         thread = new Thread(this, name);
         suspend = true;
+        gameContinue = true;
         thread.start();
         mySuspend();
-        gameContinue = true;
     }
 
     public static Player createBot(String name, int overallPot, CardTableBase table, BetManager mngr) {

@@ -21,7 +21,7 @@ public class Bet extends Betting {
                 System.out.print("Input your bet: ");
                 betSize = Integer.parseInt(new Scanner(System.in).nextLine());
             } else {
-                betSize = new Random().nextInt(player.getStack());
+                betSize = (int) (Math.random() * (player.getStack() - mngr.minBet)) + mngr.minBet;
             }
             if (mngr.isPotEnough(player, betSize) && betSize >= mngr.minBet) {
                 takeMoney(player, betSize);
@@ -43,6 +43,8 @@ public class Bet extends Betting {
 
     @Override
     public boolean isAvailable() {
+        if (player.getStack() < mngr.minBet) //для ботов
+            return false;
         return mngr.canBet;
     }
 }

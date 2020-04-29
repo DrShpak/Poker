@@ -88,7 +88,6 @@ public class BetManager {
                 case "fold" -> {
                     if (new Fold(player, this).bet()) {
                         flag = false;
-                        player.setInGame(false); // фолданул - вылетел из раздачи (не из-за стола!!)
                         lastBet = new Fold();
                     }
                 }
@@ -119,7 +118,9 @@ public class BetManager {
             filter(Objects::nonNull).
             filter(Betting::isAvailable).
             collect(Collectors.toList());
-        availableBets.get(new Random().nextInt(availableBets.size())).bet();
+        var botBet = availableBets.get(new Random().nextInt(availableBets.size()));
+        botBet.bet();
+        lastBet = botBet;
     }
 
     public void resetPlayersCurrBets() {
@@ -168,5 +169,9 @@ public class BetManager {
 
     public int getBigBlind() {
         return bigBlind;
+    }
+
+    public int getMinBet() {
+        return minBet;
     }
 }
