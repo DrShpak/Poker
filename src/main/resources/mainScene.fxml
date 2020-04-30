@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
+
+<AnchorPane prefHeight="400.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.Gui">
+   <children>
+      <Label fx:id="cbet" layoutX="14.0" layoutY="14.0" text="Current bet = 0$" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="15.0" />
+      <Label fx:id="pot" layoutX="14.0" layoutY="32.0" text="Overall pot = 0$" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="45.0" />
+      <Label fx:id="player" layoutX="182.0" layoutY="305.0" text="Current player: ?" textAlignment="RIGHT" AnchorPane.topAnchor="320.0" />
+      <Rectangle arcHeight="50.0" arcWidth="50.0" fill="#1fff87" height="192.0" layoutX="10.0" layoutY="100.0" stroke="BLACK" strokeType="INSIDE" width="510.0" AnchorPane.bottomAnchor="126.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="280.0" AnchorPane.topAnchor="100.0" />
+      <Label fx:id="pbet" layoutX="15.0" layoutY="69.0" text="Players`s bet: 0$" textAlignment="RIGHT" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="75.0" />
+      <Button fx:id="bet" disable="true" layoutX="15.0" layoutY="358.0" mnemonicParsing="false" text="bet" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" />
+      <Button fx:id="fold" disable="true" layoutX="563.0" layoutY="358.0" mnemonicParsing="false" text="fold" AnchorPane.bottomAnchor="15.0" AnchorPane.rightAnchor="15.0" />
+      <Button fx:id="check" disable="true" layoutX="112.0" layoutY="358.0" mnemonicParsing="false" text="check" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="150.0" />
+      <Button fx:id="call" disable="true" layoutX="378.0" layoutY="375.0" mnemonicParsing="false" text="call" AnchorPane.bottomAnchor="15.0" AnchorPane.rightAnchor="400.0" />
+      <Button fx:id="raise" disable="true" layoutX="414.0" layoutY="358.0" mnemonicParsing="false" text="raise" AnchorPane.bottomAnchor="15.0" AnchorPane.rightAnchor="150.0" />
+      <ListView fx:id="log" layoutX="433.0" layoutY="14.0" prefHeight="278.0" prefWidth="263.0" AnchorPane.bottomAnchor="125.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="15.0" />
+      <TextField fx:id="sum" layoutX="15.0" layoutY="318.0" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="315.0" />
+      <Label fx:id="cards" layoutX="15.0" layoutY="191.0" text="CARDS:" textAlignment="RIGHT" AnchorPane.bottomAnchor="200.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="275.0" AnchorPane.topAnchor="200.0" />
+   </children>
+</AnchorPane>
