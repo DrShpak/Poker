@@ -18,9 +18,9 @@ public class ConsoleUI {
     public void startGame() {
         do {
             hand();
-            System.out.print("Do you want to continue? y/n: ");
-        } while (!input.nextLine().equals("n"));
-        table.getPlayers().forEach(x -> x.setGameContinue(false));
+            //System.out.print("Do you want to continue? y/n: ");
+        } while (/*!input.nextLine().equals("n")*/true);
+        //table.getPlayers().forEach(x -> x.setGameContinue(false));
     }
 
     private void hand() {

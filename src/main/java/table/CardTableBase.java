@@ -23,13 +23,9 @@ public abstract class CardTableBase {
         tableCards = new ArrayList<>();
         deck = new ArrayDeque<>();
         betMngr = new BetManager();
-        players.add(Player.createBot("Антон Заварка", 1000, this, betMngr));
-        players.add(Player.createBot("Гей Турчинский", 1000, this, betMngr));
-        players.add(Player.createBot("Михаил Елдаков", 1000, this, betMngr));
-//        players.add(Player.createPlayer("Дмитрий \"Доктор Шпак\" Титов", 2000, this));
-//        players.add(Player.createPlayer("Анатолий Кринжовик", 3000, this));
-//        players.add(Player.createPlayer("Узколобый мещанин", 1000, this));
-//        players.add(Player.createPlayer("Гей Турчинский", 1000, this));
+        players.add(Player.createPlayer("Дмитрий \"Доктор Шпак\" Титов", 2000, this));
+        players.add(Player.createPlayer("Анатолий Кринжовик", 3000, this));
+        players.add(Player.createBot("Узколобый мещанин", 1000, this, betMngr));
         initHand();
     }
 

@@ -1,6 +1,6 @@
 package table;
 
-import betting.Check;
+import betting.*;
 import player.Player;
 
 import java.util.*;
@@ -53,7 +53,7 @@ public class CardTable extends CardTableBase {
             System.out.println("Player " + currPlayer.getName() + " is making a bet...");
             System.out.println(String.format("Current bet %s's = %d$", currPlayer.getName(), currPlayer.getCurrBet()));
             if (currPlayer.getThread() == null)
-                printListOfActs();
+                printListOfActs(currPlayer);
             betMngr.bet(currPlayer); // делает ставку
             if (currPlayer.getThread() != null)
                 while (currPlayer.getThread().getState() != Thread.State.WAITING) {
@@ -80,13 +80,23 @@ public class CardTable extends CardTableBase {
         setOrder();
     }
 
-    private void printListOfActs() {
+    private void printListOfActs(Player player) {
         System.out.println("List of actions: ");
-        System.out.println("\"bet\" - make min bet (access only for first player)");
-        System.out.println("\"check\"");
-        System.out.println("\"call\"");
-        System.out.println("\"raise\"");
-        System.out.println("\"fold\"");
+        if (new Bet(player, betMngr).isAvailable()) {
+            System.out.println("\"bet\" - make min bet (access only for first player)");
+        }
+        if (new Check(player, betMngr).isAvailable()) {
+            System.out.println("\"check\"");
+        }
+        if (new Call(player, betMngr).isAvailable()) {
+            System.out.println("\"call\"");
+        }
+        if (new Raise(player, betMngr).isAvailable()) {
+            System.out.println("\"raise\"");
+        }
+        if (new Fold(player, betMngr).isAvailable()) {
+            System.out.println("\"fold\"");
+        }
         System.out.print("Input your choice by words: ");
     }
 }
